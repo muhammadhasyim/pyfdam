@@ -4,7 +4,7 @@ PyFDAM is a Python implementation of the Frequency Domain Admittance Method (FDA
 
 This is a very lightweight Python module. In fact, it is essentially a small wrapper to the [LMFIT package](https://lmfit.github.io/lmfit-py/) to do non-linear fitting of impedance data and our own numerical implementation for inverse Laplace transform to perform time-domain "simulations". The theory behind these methods can be found on the previous papers!
 
-# Installation
+## Installation
 
 If you're on Linux, you can clone this project on the terminal and run the pip install command directly on the source folder 
 
@@ -14,4 +14,14 @@ $ cd pyfdam
 $ pip install .
 ```
 
-All Python dependency should be automatically installed once you run the pip install command.
+If you're on Windows, you can download the ZIP file of this project and extract the contents on some directory. Open either command prompt or Powershell and then go the main folder and type
+
+```console
+pip install .
+```
+
+All Python dependency should be automatically installed once you run the pip install command. If there's enough demand, I might release this project on PyPi, but we'll see!
+
+# Tutorial
+
+On the examples folder, there is an Jupyter notebook that would walk you through on how to fit an impedance model onto a mock impedance and galvanostatic discharge data.

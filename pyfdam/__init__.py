@@ -53,8 +53,8 @@ class ImpedanceFitter(object):
                 lm.report_fit(out1.params) 
     
     #Return the impedance values from fitted model
-    def get_impedancemodel(self,f):
-        om = 2*1j*np.pi*self.f
+    def get_impedancemodel(self,freq):
+        om = 2*1j*np.pi*freq
         return self.model(om,self.parameters)
     
     #Return the impedance values from fitted model
@@ -62,9 +62,13 @@ class ImpedanceFitter(object):
         return (self.f,self.zdata)
 
     #Save impedance data given frequency values
-    def save_impedance(self,f,filename):
-        om = 2*1j*np.pi*self.f
-        np.savetxt(filaname, (f,self.model(om,self.parameters).real, self.model(om,self.parameters).imag))
+    def save_impedance(self,freq,filename):
+        om = 2*1j*np.pi*freq
+        zdata = self.model(om,self.parameters)
+        with open(filename,"w+") as file:
+            file.write("Freq Z' Z'' \n")
+            for i in range(len(om)):
+                file.write("{} {} {} \n".format(freq[i], zdata.real[i], zdata.imag[i]))
 
 ##The Gaver-Stehfest Method for numerical inverse laplace transform
 def csteh(n,i):
@@ -114,3 +118,7 @@ class Galvanostatic(object):
     #Saving the output
     def save_output(self,filename):
         np.savetxt(filename,(self.time,self.output))
+        with open(filename,"w+") as file:
+            file.write("Time Voltage \n")
+            for i in range(len(self.time)):
+                file.write("{} {} \n".format(self.time[i], self.output[i]))

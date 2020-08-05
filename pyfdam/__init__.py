@@ -1,6 +1,7 @@
 import lmfit as lm
 import numpy as np
 import scipy as sp
+from contextlib import redirect_stdout
 
 # A helper flattening function
 def realimag(array):
@@ -27,25 +28,44 @@ class ImpedanceFitter(object):
         #Store it inside the minimizer object 
         self.minimizer = lm.Minimizer(fcn2min,parameters)
     
-    def run(self,method):
+    def run(self,method,ncycles):
         
         #Start minimizing
         out1 = self.minimizer.minimize(method=method)
-        for i in range(100):
+        for i in range(ncycles):
             out1 = self.minimizer.minimize(method='leastsq',params=out1.params)
-        out1.params.pretty_print() 
-        print(out1.success)
+        
         #Write error report
         lm.report_fit(out1.params) 
         
         #Copy the values in
         self.parameters = out1.params
-    
+   
+    #Return the parameters value
     def get_params(self):
         return self.parameters
-    def get_imp(self,f):
+    
+    #Saving the parameters values and uncertainties
+    def save_params(self,filename):
+        with open(filename, 'w') as f:
+            with redirect_stdout(f):
+                #Write error report
+                lm.report_fit(out1.params) 
+    
+    #Return the impedance values from fitted model
+    def get_impedancemodel(self,f):
         om = 2*1j*np.pi*self.f
         return self.model(om,self.parameters)
+    
+    #Return the impedance values from fitted model
+    def get_impedanceexp(self):
+        return (self.f,self.zdata)
+
+    #Save impedance data given frequency values
+    def save_impedance(self,f,filename):
+        om = 2*1j*np.pi*self.f
+        np.savetxt(filaname, (f,self.model(om,self.parameters).real, self.model(om,self.parameters).imag))
+
 ##The Gaver-Stehfest Method for numerical inverse laplace transform
 def csteh(n,i):
     fact = sp.special.factorial
@@ -69,18 +89,28 @@ def numinvlap(F, t,n):
     return lton2 * acc
 
 
-#Class to do galvanostatic experiments
+#Class to do galvanostatic experiments with the stehfest method
 class Galvanostatic(object):
     
-    def __init__(self,model,parameters,method='stehfest'):
+    def __init__(self,model,parameters):
         self.model = model
         self.parameters = parameters
         self.output = None
+        self.time = None
+    
+    def run(self,time,Iapp,V0,A=1.0,Nterms=10):
+        self.time = time
 
-    def run(self,time,Iapp,V0,A,Nterms=10):
+        #Define the function to invert
         def f(s):
-            return V0/s-Iapp*self.model(s,self.parameters)/(s*A)
+            return V0/s+Iapp*self.model(s,self.parameters)/(s*A)
+        
         self.output = numinvlap(f,time,Nterms)
 
+    #Obtaining the output
     def get_output(self):
-        return self.output
+        return (self.time, self.output)
+    
+    #Saving the output
+    def save_output(self,filename):
+        np.savetxt(filename,(self.time,self.output))

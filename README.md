@@ -24,4 +24,8 @@ All Python dependency should be automatically installed once you run the pip ins
 
 ## Tutorial
 
-On the examples folder, there is an Jupyter notebook that would walk you through on how to fit an impedance model onto a mock impedance and galvanostatic discharge data.
+On the `tutorial` folder, there is a Jupyter notebook that would walk you through on how to fit an impedance model onto a mock impedance and galvanostatic discharge data. If you view it [from here](https://github.com/muhammadhasyim/pyfdam/blob/master/tutorial/pyfdam_tutorial.ipynb), it should render as a static page.
+
+## Maintenance Status
+
+I am most maintaining this project and won't be active developing it. However, feel free to contact me via GitHub for any features that you'd like to see.

@@ -22,6 +22,6 @@ pip install .
 
 All Python dependency should be automatically installed once you run the pip install command. If there's enough demand, I might release this project on PyPi, but we'll see!
 
-# Tutorial
+## Tutorial
 
 On the examples folder, there is an Jupyter notebook that would walk you through on how to fit an impedance model onto a mock impedance and galvanostatic discharge data.
